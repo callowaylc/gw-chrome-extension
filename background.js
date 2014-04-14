@@ -11,7 +11,10 @@ function random_uri() {
 }
 
 function random_timeout() {
-  return Math.floor((Math.random()*90)+10) * 1000
+  var max = 90
+  var min = 10
+
+  return (Math.floor(Math.random() * (max - min + 1)) + min) * 1000
 }
 
 
@@ -33,10 +36,12 @@ chrome.windows.onCreated.addListener(function(w) {
         var counter     = 0
         var page_visits = Math.floor((Math.random()*6)+2)
 
+
         // set random user agents 
+        // PASS
 
         // set random timeout
-        reload_tab = function(wait) {
+        reload_tab = function(wait, tab_id) {
 
           // if we have iterated 7 times, or this is the first
           // instance, then 
@@ -55,13 +60,13 @@ chrome.windows.onCreated.addListener(function(w) {
           chrome.tabs.reload(tab_id, { }, function() { })
 
           setTimeout(function() { 
-            reload_tab(random_timeout())
+            reload_tab(random_timeout(), tab_id)
 
           }, wait)
 
         }
 
-        reload_tab(random_timeout())
+        reload_tab(random_timeout(), tab_id)
       }
       f(w.tabs[0].id)
 
