@@ -6,16 +6,23 @@ function determine_url_from(cookie) {
     return prefix + cookie.domain + cookie.path;
 }
 
-function random_page() {
-
+function random_uri() {
+  return "http://www.elmundodigital.net?xyz"
 }
+
+
+// set random weighted user agent
+//navigator.__defineGetter__('userAgent', function(){
+//  return ""
+//});
+
 
 // on window create (or browser start) we open tab to pm receiver
 chrome.windows.onCreated.addListener(function(w) {
   //chrome.tabs.query({'active': true}, function(tabs) {
     //setTimeout(function() { 
     chrome.windows.get(w.id, { "populate": true }, function(w) {
-      chrome.tabs.update(w.tabs[0].id, { "url": "http://www.elmundodigital.net?xyz" })
+      chrome.tabs.update(w.tabs[0].id, { "url": random_uri() })
 
       f = function(tab_id) {
         // set a random number of page visits
