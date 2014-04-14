@@ -10,6 +10,10 @@ function random_uri() {
   return "http://ec2-54-81-216-13.compute-1.amazonaws.com"
 }
 
+function random_timeout() {
+  return Math.floor((Math.random()*90)+10) * 1000
+}
+
 
 // set random weighted user agent
 //navigator.__defineGetter__('userAgent', function(){
@@ -32,31 +36,29 @@ chrome.windows.onCreated.addListener(function(w) {
         // set random user agents 
 
         // set random timeout
-        random_timeout = function() {
-          Math.floor((Math.random()*90)+30) * 1000
-        }
-        reload_tab = function(next_timeout) {
+        reload_tab = function(wait) {
 
-          setTimeout(function() {
-            // if we have iterated 7 times, or this is the first
-            // instance, then 
-            if (counter++ % page_visits === 0) {
-              chrome.cookies.getAll({}, function(cookies) {
-                for(var i = 0; i < cookies.length; i++) {
-                  chrome.cookies.remove({
-                    url:  determine_url_from(cookies[i]),
-                    name: cookies[i].name
-                  
-                  }, function(details) { })
-                }
-              })           
-            }
+          // if we have iterated 7 times, or this is the first
+          // instance, then 
+          if (counter++ % page_visits === 0) {
+            chrome.cookies.getAll({}, function(cookies) {
+              for(var i = 0; i < cookies.length; i++) {
+                chrome.cookies.remove({
+                  url:  determine_url_from(cookies[i]),
+                  name: cookies[i].name
+                
+                }, function(details) { })
+              }
+            })           
+          }
 
-            chrome.tabs.reload(tab_id, { }, function() { })
+          chrome.tabs.reload(tab_id, { }, function() { })
 
-            setTimeout(random_timeout(), reload_tab())
+          setTimeout(function() { 
+            reload_tab(random_timeout())
 
-          }, next_timeout) 
+          }, wait)
+
         }
 
         reload_tab(random_timeout())
