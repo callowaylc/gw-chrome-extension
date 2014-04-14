@@ -7,7 +7,7 @@ function determine_url_from(cookie) {
 }
 
 function random_uri() {
-  return "http://ec2-54-81-216-13.compute-1.amazonaws.com"
+  return "http://www.elmundodigital.net"
 }
 
 function random_timeout() {
