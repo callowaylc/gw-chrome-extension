@@ -60,13 +60,12 @@ chrome.windows.getAll({ "populate": true  }, function(windows) {
          
           setTimeout(function() {  
             chrome.tabs.reload(tab_id, { }, function() { })
+
+            setTimeout(function() { 
+              reload_tab(random_timeout(), tab_id)
+
+            }, wait)
           }, 1000)
-
-          setTimeout(function() { 
-            reload_tab(random_timeout(), tab_id)
-
-          }, wait)
-
         }
 
         reload_tab(random_timeout(), tab_id)
