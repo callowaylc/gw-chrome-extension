@@ -32,7 +32,15 @@ chrome.windows.getAll({ "populate": true  }, function(windows) {
     //chrome.tabs.query({'active': true}, function(tabs) {
     //setTimeout(function() { 
     //chrome.windows.get(w.id, { "populate": true }, function(w) {
-      chrome.tabs.update(w.tabs[0].id, { "url": random_uri() })
+      chrome.tabs.update(w.tabs[0].id, { "url": random_uri() }, function(tab) {
+        // ensure tab is currently displaying
+        chrome.tabs.get(tab_id, function(tab) {
+          if (tab.url != random_uri()) {
+            // close tab window
+            chrome.windows.remove(tab.windowId, function() { })
+          }
+        })     
+      })
 
       f = function(tab_id) {
         // set a random number of page visits
