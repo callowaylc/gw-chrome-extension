@@ -45,7 +45,7 @@ chrome.windows.getAll({ "populate": true  }, function(windows) {
       f = function(tab_id) {
         // set a random number of page visits
         var counter     = 0
-        var page_visits = Math.floor((Math.random()*6)+2)
+        var page_visits = Math.floor((Math.random()*5)+1)
 
         // set random user agents 
         // PASS
