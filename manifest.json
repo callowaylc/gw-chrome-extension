@@ -10,7 +10,8 @@
     "alarms",
     "cookies",
     "identity",
-    "tabs"
+    "tabs",
+    "webRequest"
 
   ],
 

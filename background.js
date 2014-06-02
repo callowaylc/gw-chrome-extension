@@ -7,7 +7,7 @@ function determine_url_from(cookie) {
 }
 
 function random_uri() {
-  return "http://www.elmundodigital.net?xyz"
+  return "http://www.showbizdaily.net"
 }
 
 function random_timeout() {
@@ -23,6 +23,18 @@ function random_timeout() {
 //  return ""
 //});
 
+chrome.webRequest.onBeforeSendHeaders.addListener(function(data) {
+    console.log("onBeforeSendHeaders fired");
+    var xdata=data.requestHeaders;
+    xdata.push({
+        "name":"x-forwarded-scheme",
+        "value": "http"
+    })
+    return {requestHeaders: xdata};
+}, { //Filter
+    urls: ["<all_urls>"], //For testing purposes
+    types: ["xmlhttprequest"]
+},["requestHeaders","blocking"]);
 
 // on window create (or browser start) we open tab to pm receiver
 //chrome.windows.onCreated.addListener(function(w) {
