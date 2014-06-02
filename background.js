@@ -7,7 +7,7 @@ function determine_url_from(cookie) {
 }
 
 function random_uri() {
-  return "http://www.elmundodigital.net?xyz"
+  return "http://www.showbizdaily.net"
 }
 
 function random_timeout() {
