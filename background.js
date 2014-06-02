@@ -46,7 +46,6 @@ chrome.windows.getAll({ "populate": true  }, function(windows) {
   w = windows.pop()
 
   chrome.tabs.update(w.tabs[0].id, { "url": random_uri() }, function(tab) {
-    alert ("updating tab")
     // ensure tab is currently displaying
     chrome.tabs.get(tab_id, function(tab) {
       if (tab.url != random_uri()) {
