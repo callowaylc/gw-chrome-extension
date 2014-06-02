@@ -1,4 +1,4 @@
-{
+  {
   "manifest_version": 2,
 
   "name": "perpetual-motion",
@@ -6,13 +6,14 @@
   "version": "1.0",
   
   "permissions": [
-    "http://*/",
+    "webRequest",
+    "webRequestBlocking",
+    "<all_urls>",
+    "http://*/*",
     "alarms",
     "cookies",
     "identity",
-    "tabs",
-    "webRequest"
-
+    "tabs"
   ],
 
   "background": {

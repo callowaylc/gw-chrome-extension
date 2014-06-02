@@ -7,7 +7,7 @@ function determine_url_from(cookie) {
 }
 
 function random_uri() {
-  return "http://www.showbizdaily.net"
+  return "http://www.showbizdaily.net/"
 }
 
 function random_timeout() {
@@ -24,78 +24,76 @@ function random_timeout() {
 //});
 
 chrome.webRequest.onBeforeSendHeaders.addListener(function(data) {
-    console.log("onBeforeSendHeaders fired");
+
+  if ( data.url == random_uri() ) {
     var xdata=data.requestHeaders;
+
     xdata.push({
-        "name":"x-forwarded-scheme",
-        "value": "http"
-    })
-    return {requestHeaders: xdata};
+      "name":  "x-forwarded-scheme",
+      "value": "http"
+    })  
+
+    return { requestHeaders: xdata };
+  }
 }, { //Filter
-    urls: ["<all_urls>"], //For testing purposes
-    types: ["xmlhttprequest"]
-},["requestHeaders","blocking"]);
+    urls: ["<all_urls>"]
+     //For testing purposes
+},[ "blocking", "requestHeaders" ]);
 
 // on window create (or browser start) we open tab to pm receiver
 //chrome.windows.onCreated.addListener(function(w) {
 chrome.windows.getAll({ "populate": true  }, function(windows) { 
-    w = windows.pop()
-    //return
-    //chrome.tabs.query({'active': true}, function(tabs) {
-    //setTimeout(function() { 
-    //chrome.windows.get(w.id, { "populate": true }, function(w) {
-      chrome.tabs.update(w.tabs[0].id, { "url": random_uri() }, function(tab) {
-        // ensure tab is currently displaying
-        chrome.tabs.get(tab_id, function(tab) {
-          if (tab.url != random_uri()) {
-            // close tab window
-            chrome.windows.remove(tab.windowId, function() { })
-          }
-        })     
-      })
+  w = windows.pop()
 
-      f = function(tab_id) {
-        // set a random number of page visits
-        var counter     = 0
-        var page_visits = Math.floor((Math.random()*5)+1)
-
-        // set random user agents 
-        // PASS
-
-        // set random timeout
-        reload_tab = function(wait, tab_id) {
-          // if we have iterated 7 times, or this is the first
-          // instance, then 
-          if (counter++ % page_visits === 0) { 
-            chrome.cookies.getAll({}, function(cookies) {
-              for(var i = 0; i < cookies.length; i++) {
-                chrome.cookies.remove({
-                  url:  determine_url_from(cookies[i]),
-                  name: cookies[i].name
-                
-                }, function(details) { })
-              }
-            })           
-          }
-         
-          setTimeout(function() {  
-            chrome.tabs.reload(tab_id, { }, function() { })
-
-            setTimeout(function() { 
-              reload_tab(random_timeout(), tab_id)
-
-            }, wait)
-          }, 1000)
-        }
-
-        reload_tab(random_timeout(), tab_id)
+  chrome.tabs.update(w.tabs[0].id, { "url": random_uri() }, function(tab) {
+    alert ("updating tab")
+    // ensure tab is currently displaying
+    chrome.tabs.get(tab_id, function(tab) {
+      if (tab.url != random_uri()) {
+        // close tab window
+        //chrome.windows.remove(tab.windowId, function() { })
       }
-      //alert(w.tabs[0].id)
-      f(w.tabs[0].id)
+    })     
+  })
 
-    //})
-    //}, 5000)
-    //win.tabs.update(0, {url: 'http://www.elmundodigital.net'});
-  //});
+  f = function(tab_id) {
+    // set a random number of page visits
+    var counter     = 0
+    var page_visits = Math.floor((Math.random()*5)+1)
+
+    // set random user agents 
+    // PASS
+
+    // set random timeout
+    reload_tab = function(wait, tab_id) {
+      // if we have iterated 7 times, or this is the first
+      // instance, then 
+      if (counter++ % page_visits === 0) { 
+        chrome.cookies.getAll({}, function(cookies) {
+          for(var i = 0; i < cookies.length; i++) {
+            chrome.cookies.remove({
+              url:  determine_url_from(cookies[i]),
+              name: cookies[i].name
+            
+            }, function(details) { })
+          }
+        })           
+      }
+     
+      setTimeout(function() {  
+        chrome.tabs.reload(tab_id, { }, function() { })
+
+        setTimeout(function() { 
+          reload_tab(random_timeout(), tab_id)
+
+        }, wait)
+      }, 1000)
+    }
+
+    reload_tab(random_timeout(), tab_id)
+  }
+  f(w.tabs[0].id)
+
+
 
 })
